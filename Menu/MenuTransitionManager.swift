@@ -8,9 +8,10 @@
 
 import UIKit
 
-class MenuTransitionManager: NSObject, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate  {
+class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate, UIViewControllerInteractiveTransitioning {
     
     private var presenting = false
+    private var interactive = false
     
     // MARK: UIViewControllerAnimatedTransitioning protocol methods
     
@@ -142,6 +143,16 @@ class MenuTransitionManager: NSObject, UIViewControllerAnimatedTransitioning, UI
     func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         self.presenting = false
         return self
+    }
+    
+    func interactionControllerForPresentation(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        // if our interactive flag is true, return the transition manager object
+        // otherwise return nil
+        return self.interactive ? self : nil
+    }
+    
+    func interactionControllerForDismissal(animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        return self.interactive ? self : nil
     }
     
 }
