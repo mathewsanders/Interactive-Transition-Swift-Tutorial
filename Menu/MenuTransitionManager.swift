@@ -12,6 +12,22 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
     
     private var presenting = false
     private var interactive = false
+
+    private var enterPanGesture: UIScreenEdgePanGestureRecognizer!
+    
+    var sourceViewController: UIViewController! {
+        didSet {
+            self.enterPanGesture = UIScreenEdgePanGestureRecognizer()
+            self.enterPanGesture.addTarget(self, action:"handleOnstagePan:")
+            self.enterPanGesture.edges = UIRectEdge.Left
+            self.sourceViewController.view.addGestureRecognizer(self.enterPanGesture)
+        }
+    }
+    
+    // TODO: We need to complete this method to do something useful
+    func handleOnstagePan(pan: UIPanGestureRecognizer){
+        println("Todo: handle onstage gesture...")
+    }
     
     // MARK: UIViewControllerAnimatedTransitioning protocol methods
     

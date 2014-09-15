@@ -16,6 +16,7 @@ class MainViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        self.transitionManager.sourceViewController = self
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
