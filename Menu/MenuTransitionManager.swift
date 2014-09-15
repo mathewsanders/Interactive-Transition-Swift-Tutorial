@@ -124,7 +124,11 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
         
         // prepare menu items to slide in
         if (self.presenting){
-            self.offStageMenuController(menuViewController)
+            if(self.interactive){
+                self.offStageMenuControllerInteractive(menuViewController) // offstage for interactive
+            }else{
+                self.offStageMenuController(menuViewController) // offstage for default
+            }
         }
         
         // add the both views to our view controller
@@ -140,7 +144,12 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
                     self.onStageMenuController(menuViewController) // onstage items: slide in
                 }
                 else {
-                    self.offStageMenuController(menuViewController) // offstage items: slide out
+                    if(self.interactive){
+                        self.offStageMenuControllerInteractive(menuViewController) // offstage for interactive
+                    }else{
+                        self.offStageMenuController(menuViewController) // offstage for default
+                    }
+                    
                 }
 
             }, completion: { finished in
@@ -196,7 +205,32 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
         menuViewController.audioPostIcon.transform = self.offStage(bottomRowOffset)
         menuViewController.audioPostLabel.transform = self.offStage(bottomRowOffset)
         
+    }
+    
+    func offStageMenuControllerInteractive(menuViewController: MenuViewController){
         
+        menuViewController.view.alpha = 0
+        
+        // setup paramaters for 2D transitions for animations
+        let offstageOffset  :CGFloat = -300
+        
+        menuViewController.textPostIcon.transform = self.offStage(offstageOffset)
+        menuViewController.textPostLabel.transform = self.offStage(offstageOffset)
+        
+        menuViewController.quotePostIcon.transform = self.offStage(offstageOffset)
+        menuViewController.quotePostLabel.transform = self.offStage(offstageOffset)
+        
+        menuViewController.chatPostIcon.transform = self.offStage(offstageOffset)
+        menuViewController.chatPostLabel.transform = self.offStage(offstageOffset)
+        
+        menuViewController.photoPostIcon.transform = self.offStage(offstageOffset)
+        menuViewController.photoPostLabel.transform = self.offStage(offstageOffset)
+        
+        menuViewController.linkPostIcon.transform = self.offStage(offstageOffset)
+        menuViewController.linkPostLabel.transform = self.offStage(offstageOffset)
+        
+        menuViewController.audioPostIcon.transform = self.offStage(offstageOffset)
+        menuViewController.audioPostLabel.transform = self.offStage(offstageOffset)
         
     }
     
