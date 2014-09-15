@@ -10,9 +10,20 @@ import UIKit
 
 class MainViewController: UITableViewController {
 
+    // create instance of our custom transition manager
+    let transitionManager = MenuTransitionManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+        
+        // set transition delegate for our menu view controller
+        let menu = segue.destinationViewController as MenuViewController
+        menu.transitioningDelegate = self.transitionManager
+        
     }
     
     @IBAction func unwindToMainViewController (sender: UIStoryboardSegue){
