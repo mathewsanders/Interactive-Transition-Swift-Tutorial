@@ -126,23 +126,20 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
         // assign references to our menu view controller and the 'bottom' view controller from the tuple
         // remember that our menuViewController will alternate between the from and to view controller depending if we're presenting or dismissing
         let menuViewController = !self.presenting ? screens.from as MenuViewController : screens.to as MenuViewController
-        let bottomViewController = !self.presenting ? screens.to as UIViewController : screens.from as UIViewController
+        let topViewController = !self.presenting ? screens.to as UIViewController : screens.from as UIViewController
         
         let menuView = menuViewController.view
-        let bottomView = bottomViewController.view
+        let topView = topViewController.view
         
         // prepare menu items to slide in
         if (self.presenting){
-            if(self.interactive){
-                self.offStageMenuControllerInteractive(menuViewController) // offstage for interactive
-            }else{
-                self.offStageMenuController(menuViewController) // offstage for default
-            }
+            self.offStageMenuControllerInteractive(menuViewController) // offstage for interactive
         }
         
         // add the both views to our view controller
-        container.addSubview(bottomView)
+        
         container.addSubview(menuView)
+        container.addSubview(topView)
         container.addSubview(self.statusBarBackground)
         
         let duration = self.transitionDuration(transitionContext)
@@ -152,14 +149,11 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
             
                 if (self.presenting){
                     self.onStageMenuController(menuViewController) // onstage items: slide in
+                    topView.transform = self.offStage(290)
                 }
                 else {
-                    if(self.interactive){
-                        self.offStageMenuControllerInteractive(menuViewController) // offstage for interactive
-                    }else{
-                        self.offStageMenuController(menuViewController) // offstage for default
-                    }
-                    
+                    topView.transform = CGAffineTransformIdentity
+                    self.offStageMenuControllerInteractive(menuViewController)
                 }
 
             }, completion: { finished in
@@ -189,43 +183,13 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
         return CGAffineTransformMakeTranslation(amount, 0)
     }
     
-    func offStageMenuController(menuViewController: MenuViewController){
-        
-        menuViewController.view.alpha = 0
-        self.statusBarBackground.backgroundColor = self.sourceViewController.view.backgroundColor
-        
-        // setup paramaters for 2D transitions for animations
-        let topRowOffset  :CGFloat = 300
-        let middleRowOffset :CGFloat = 150
-        let bottomRowOffset  :CGFloat = 50
-        
-        menuViewController.textPostIcon.transform = self.offStage(-topRowOffset)
-        menuViewController.textPostLabel.transform = self.offStage(-topRowOffset)
-        
-        menuViewController.quotePostIcon.transform = self.offStage(-middleRowOffset)
-        menuViewController.quotePostLabel.transform = self.offStage(-middleRowOffset)
-        
-        menuViewController.chatPostIcon.transform = self.offStage(-bottomRowOffset)
-        menuViewController.chatPostLabel.transform = self.offStage(-bottomRowOffset)
-        
-        menuViewController.photoPostIcon.transform = self.offStage(topRowOffset)
-        menuViewController.photoPostLabel.transform = self.offStage(topRowOffset)
-        
-        menuViewController.linkPostIcon.transform = self.offStage(middleRowOffset)
-        menuViewController.linkPostLabel.transform = self.offStage(middleRowOffset)
-        
-        menuViewController.audioPostIcon.transform = self.offStage(bottomRowOffset)
-        menuViewController.audioPostLabel.transform = self.offStage(bottomRowOffset)
-        
-    }
-    
     func offStageMenuControllerInteractive(menuViewController: MenuViewController){
         
         menuViewController.view.alpha = 0
         self.statusBarBackground.backgroundColor = self.sourceViewController.view.backgroundColor
         
         // setup paramaters for 2D transitions for animations
-        let offstageOffset  :CGFloat = -300
+        let offstageOffset  :CGFloat = -200
         
         menuViewController.textPostIcon.transform = self.offStage(offstageOffset)
         menuViewController.textPostLabel.transform = self.offStage(offstageOffset)
