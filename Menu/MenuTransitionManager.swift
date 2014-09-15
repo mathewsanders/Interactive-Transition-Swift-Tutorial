@@ -14,6 +14,7 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
     private var interactive = false
 
     private var enterPanGesture: UIScreenEdgePanGestureRecognizer!
+    private var statusBarBackground: UIView!
     
     var sourceViewController: UIViewController! {
         didSet {
@@ -21,6 +22,14 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
             self.enterPanGesture.addTarget(self, action:"handleOnstagePan:")
             self.enterPanGesture.edges = UIRectEdge.Left
             self.sourceViewController.view.addGestureRecognizer(self.enterPanGesture)
+            
+            // create view to go behind statusbar
+            self.statusBarBackground = UIView()
+            self.statusBarBackground.frame = CGRect(x: 0, y: 0, width: self.sourceViewController.view.frame.width, height: 20)
+            self.statusBarBackground.backgroundColor = self.sourceViewController.view.backgroundColor
+            
+            // add to window rather than view controller
+            UIApplication.sharedApplication().keyWindow.addSubview(self.statusBarBackground)
         }
     }
     
@@ -134,6 +143,7 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
         // add the both views to our view controller
         container.addSubview(bottomView)
         container.addSubview(menuView)
+        container.addSubview(self.statusBarBackground)
         
         let duration = self.transitionDuration(transitionContext)
         
@@ -169,6 +179,7 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
                     UIApplication.sharedApplication().keyWindow.addSubview(screens.to.view)
                     
                 }
+                UIApplication.sharedApplication().keyWindow.addSubview(self.statusBarBackground)
                 
         })
         
@@ -181,6 +192,7 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
     func offStageMenuController(menuViewController: MenuViewController){
         
         menuViewController.view.alpha = 0
+        self.statusBarBackground.backgroundColor = self.sourceViewController.view.backgroundColor
         
         // setup paramaters for 2D transitions for animations
         let topRowOffset  :CGFloat = 300
@@ -210,6 +222,7 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
     func offStageMenuControllerInteractive(menuViewController: MenuViewController){
         
         menuViewController.view.alpha = 0
+        self.statusBarBackground.backgroundColor = self.sourceViewController.view.backgroundColor
         
         // setup paramaters for 2D transitions for animations
         let offstageOffset  :CGFloat = -300
@@ -238,6 +251,7 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
         
         // prepare menu to fade in
         menuViewController.view.alpha = 1
+        self.statusBarBackground.backgroundColor = UIColor.blackColor()
         
         menuViewController.textPostIcon.transform = CGAffineTransformIdentity
         menuViewController.textPostLabel.transform = CGAffineTransformIdentity
