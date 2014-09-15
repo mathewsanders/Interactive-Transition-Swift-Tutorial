@@ -24,6 +24,7 @@ class MainViewController: UITableViewController {
         // set transition delegate for our menu view controller
         let menu = segue.destinationViewController as MenuViewController
         menu.transitioningDelegate = self.transitionManager
+        self.transitionManager.menuViewController = menu
         
     }
     
