@@ -53,7 +53,14 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
             
             // return flag to false and finish the transition
             self.interactive = false
-            self.finishInteractiveTransition()
+            if(d > 0.2){
+                // threshold crossed: finish
+                self.finishInteractiveTransition()
+            }
+            else {
+                // threshold not met: cancel
+                self.cancelInteractiveTransition()
+            }
         }
     }
     
@@ -100,10 +107,20 @@ class MenuTransitionManager: UIPercentDrivenInteractiveTransition, UIViewControl
             }, completion: { finished in
                 
                 // tell our transitionContext object that we've finished animating
-                transitionContext.completeTransition(true)
-                
-                // bug: we have to manually add our 'to view' back http://openradar.appspot.com/radar?id=5320103646199808
-                UIApplication.sharedApplication().keyWindow.addSubview(screens.to.view)
+                if(transitionContext.transitionWasCancelled()){
+                    
+                    transitionContext.completeTransition(false)
+                    // bug: we have to manually add our 'to view' back http://openradar.appspot.com/radar?id=5320103646199808
+                    UIApplication.sharedApplication().keyWindow.addSubview(screens.from.view)
+                    
+                }
+                else {
+                    
+                    transitionContext.completeTransition(true)
+                    // bug: we have to manually add our 'to view' back http://openradar.appspot.com/radar?id=5320103646199808
+                    UIApplication.sharedApplication().keyWindow.addSubview(screens.to.view)
+                    
+                }
                 
         })
         
